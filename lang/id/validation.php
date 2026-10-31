@@ -1,0 +1,48 @@
+<?php
+
+// Pesan validasi bahasa Indonesia untuk aturan yang dipakai aplikasi ini.
+// Aturan lain otomatis jatuh ke bahasa Inggris (APP_FALLBACK_LOCALE=en).
+return [
+    'alpha_dash' => ':Attribute hanya boleh berisi huruf, angka, tanda hubung, dan garis bawah.',
+    'array' => ':Attribute tidak valid.',
+    'between' => ['numeric' => ':Attribute harus di antara :min dan :max.'],
+    'confirmed' => 'Konfirmasi :attribute tidak cocok.',
+    'in' => ':Attribute tidak valid.',
+    'integer' => ':Attribute harus berupa angka bulat.',
+    'max' => [
+        'array' => ':Attribute maksimal :max baris.',
+        'numeric' => ':Attribute maksimal :max.',
+        'string' => ':Attribute maksimal :max karakter.',
+    ],
+    'min' => [
+        'array' => ':Attribute minimal :min baris.',
+        'numeric' => ':Attribute minimal :min.',
+        'string' => ':Attribute minimal :min karakter.',
+    ],
+    'numeric' => ':Attribute harus berupa angka.',
+    'regex' => 'Format :attribute harus JJ:MM.',
+    'required' => ':Attribute wajib diisi.',
+    'string' => ':Attribute harus berupa teks.',
+    'unique' => ':Attribute sudah dipakai.',
+
+    'attributes' => [
+        'username' => 'username',
+        'password' => 'kata sandi',
+        'nama' => 'nama',
+        'lama' => 'kata sandi lama',
+        'baru' => 'kata sandi baru',
+        'jam_masuk' => 'jam masuk',
+        'lokasi_nama' => 'nama lokasi',
+        'radius' => 'radius',
+        'lat' => 'latitude',
+        'lng' => 'longitude',
+        'reward_sampai' => 'batas jam reward',
+        'reward_nominal' => 'nominal reward',
+        'tepat_sampai' => 'batas jam tepat waktu',
+        'pinalti' => 'tingkat pinalti',
+        'pinalti.*.sampai' => 'batas jam pinalti',
+        'pinalti.*.nominal' => 'nominal pinalti',
+        'keputusan' => 'keputusan',
+        'catatan' => 'catatan',
+    ],
+];

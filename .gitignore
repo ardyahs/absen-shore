@@ -1,0 +1,40 @@
+# Dependensi
+/vendor
+/node_modules
+
+# Environment (berisi password DB & APP_KEY, jangan pernah di-commit)
+.env
+.env.backup
+.env.production
+/auth.json
+
+# Build & file publik hasil generate
+/public/build
+/public/hot
+/public/storage
+/public/fonts-manifest.dev.json
+
+# Storage & cache
+/storage/*.key
+/storage/pail
+*.log
+.phpunit.result.cache
+/.phpunit.cache
+
+# Database lokal
+/database/*.sqlite
+/database/*.sqlite-journal
+
+# Editor & OS
+/.idea
+/.vscode
+/.zed
+/.nova
+/.cursor/
+/.codex
+.phpactor.json
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+.DS_Store
+Thumbs.db

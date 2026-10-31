@@ -13,7 +13,9 @@
     <div class="jam" id="jam">{{ $sekarang->format('H:i') }}</div>
     <p class="jam-zona">WITA</p>
 
-    @if ($perluAbsen)
+    @if ($perluAbsen && ! $dibuka)
+        <p class="petunjuk">Absen dibuka pukul {{ $jamBuka }} sampai 23:59 WITA.</p>
+    @elseif ($perluAbsen)
         <div id="absen"
              data-kirim="{{ route('absen.kirim') }}"
              data-lat="{{ $p->lat }}" data-lng="{{ $p->lng }}" data-radius="{{ $p->radius }}">

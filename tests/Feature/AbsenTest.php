@@ -56,8 +56,20 @@ class AbsenTest extends TestCase
         $this->assertSame('valid', $absen->fresh()->status);
     }
 
+    public function test_absen_di_luar_jam_buka_ditolak(): void
+    {
+        Storage::fake('local');
+        config(['absensi.simulasi_jam' => '03:37']);
+        $karyawan = User::factory()->create();
+
+        $this->actingAs($karyawan)->get('/absen')->assertSee('Absen dibuka pukul 15:00')->assertDontSee('tombol-absen');
+        $this->actingAs($karyawan)->postJson('/absen', $this->kiriman())->assertStatus(422);
+        $this->assertDatabaseCount('attendances', 0);
+    }
+
     public function test_foto_wajib_jpeg_dari_kamera(): void
     {
+        config(['absensi.simulasi_jam' => '15:30']);
         $karyawan = User::factory()->create();
         $kiriman = ['foto' => 'data:image/png;base64,AAAA'] + $this->kiriman();
 

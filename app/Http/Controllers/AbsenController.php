@@ -29,6 +29,8 @@ class AbsenController extends Controller
             'hariIni' => $hariIni,
             'perluAbsen' => ! $hariIni || $hariIni->status === 'ditolak',
             'sekarang' => Waktu::sekarang(),
+            'dibuka' => AturanAbsen::dibuka(Waktu::jam()),
+            'jamBuka' => AturanAbsen::JAM_BUKA,
         ]);
     }
 
@@ -38,7 +40,12 @@ class AbsenController extends Controller
         $user = $request->user();
         $p = Pengaturan::aktif();
 
-        $lat = filter_var($request->input('lat'), FILTER_VALIDATE_FLOAT);
+        $jam = Waktu::jam();
+        if (! AturanAbsen::dibuka($jam)) {
+            return $this->gagal('Absen hanya bisa dilakukan pukul '.AturanAbsen::JAM_BUKA.'–23:59 WITA.');
+        }
+
+        $lat =filter_var($request->input('lat'), FILTER_VALIDATE_FLOAT);
         $lng = filter_var($request->input('lng'), FILTER_VALIDATE_FLOAT);
         if ($lat === false || $lng === false || abs($lat) > 90 || abs($lng) > 180) {
             return $this->gagal('Lokasi GPS tidak valid.');
@@ -61,7 +68,6 @@ class AbsenController extends Controller
         }
 
         $tanggal = Waktu::tanggal();
-        $jam = Waktu::jam();
         $selisih = AturanAbsen::selisih($jam, $p->jam_masuk);
         $hasil = AturanAbsen::klasifikasi($selisih, $p->aturan);
 

@@ -34,6 +34,24 @@ class AturanAbsenTest extends TestCase
         $this->assertSame(['kategori' => $kategori, 'nominal' => $nominal], AturanAbsen::klasifikasi($selisih));
     }
 
+    public static function jamBuka(): array
+    {
+        return [
+            ['00:00', false],
+            ['03:37', false],
+            ['14:59', false],
+            ['15:00', true],
+            ['16:00', true],
+            ['23:59', true],
+        ];
+    }
+
+    #[DataProvider('jamBuka')]
+    public function test_absen_hanya_dibuka_jam_15_sampai_23_59(string $jam, bool $dibuka): void
+    {
+        $this->assertSame($dibuka, AturanAbsen::dibuka($jam));
+    }
+
     public function test_jarak_gps(): void
     {
         $this->assertSame(0, (int) round(AturanAbsen::jarakMeter(-5.1, 119.4, -5.1, 119.4)));

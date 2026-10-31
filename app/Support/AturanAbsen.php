@@ -22,7 +22,15 @@ final class AturanAbsen
         ['dari' => 31, 'sampai' => 1440, 'kategori' => 'terlambat', 'nominal' => -15000],
     ];
 
+    /** Absen hanya bisa 15:00–23:59; lewat 00:00 sudah hari baru, jadi tertutup sampai 15:00. */
+    public const JAM_BUKA = '15:00';
+
     private const POLA_JAM = '/^([01]\d|2[0-3]):[0-5]\d$/';
+
+    public static function dibuka(string $jam, string $jamBuka = self::JAM_BUKA): bool
+    {
+        return self::jamKeMenit($jam) >= self::jamKeMenit($jamBuka);
+    }
 
     /** @return array{kategori: string, nominal: int} */
     public static function klasifikasi(int $selisih, array $aturan = self::BAWAAN): array

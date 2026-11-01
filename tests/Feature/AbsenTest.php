@@ -77,6 +77,29 @@ class AbsenTest extends TestCase
         $this->assertDatabaseCount('attendances', 0);
     }
 
+    public function test_admin_mengubah_gaji_harian_dan_rekap_menghitung_total_gaji(): void
+    {
+        Storage::fake('local');
+        config(['absensi.simulasi_jam' => '15:42']);
+        $karyawan = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $this->assertSame(50000, $karyawan->fresh()->gaji_harian);
+
+        $this->actingAs($admin)->put("/admin/karyawan/{$karyawan->id}/gaji", ['gaji_harian' => 60000])->assertRedirect();
+        $this->assertSame(60000, $karyawan->fresh()->gaji_harian);
+
+        $this->actingAs($karyawan)->postJson('/absen', $this->kiriman())->assertOk();
+        $this->actingAs($admin)->get('/admin/rekap')->assertSee('Rp65.000');
+    }
+
+    public function test_karyawan_tidak_bisa_mengubah_gaji(): void
+    {
+        $karyawan = User::factory()->create();
+
+        $this->actingAs($karyawan)->put("/admin/karyawan/{$karyawan->id}/gaji", ['gaji_harian' => 999999]);
+        $this->assertSame(50000, $karyawan->fresh()->gaji_harian);
+    }
+
     public function test_karyawan_tidak_bisa_membuka_halaman_admin(): void
     {
         $this->actingAs(User::factory()->create())->get('/admin')->assertRedirect(route('home'));

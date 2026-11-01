@@ -20,6 +20,7 @@
     </div>
 
     <div class="angka">
+        <div><b>{{ rupiah($totalGaji) }}</b><span>Total gaji {{ $hari }} hari</span></div>
         <div><b class="baik">{{ rupiah($totalReward) }}</b><span>Total reward</span></div>
         <div><b class="waspada">{{ rupiah($totalPinalti) }}</b><span>Total pinalti dari {{ $totalTerlambat }} keterlambatan</span></div>
     </div>
@@ -31,6 +32,7 @@
                 <th>Karyawan</th><th class="kanan">Hadir</th><th class="kanan">Reward</th><th class="kanan">Tepat</th>
                 <th class="kanan">Terlambat</th><th class="kanan">Total reward</th><th class="kanan">Total pinalti</th>
                 <th class="kanan">Saldo</th><th class="kanan">Tepat waktu</th>
+                <th class="kanan">Gaji pokok</th><th class="kanan">Total gaji</th>
             </tr>
             </thead>
             <tbody>
@@ -45,9 +47,11 @@
                     <td class="kanan">{{ rupiah($x['total_pinalti']) }}</td>
                     <td class="kanan"><b @class(['baik' => $x['saldo'] >= 0, 'waspada' => $x['saldo'] < 0])>{{ rupiah($x['saldo'], true) }}</b></td>
                     <td class="kanan">{{ $x['persen_tepat'] }}%</td>
+                    <td class="kanan">{{ rupiah($x['gaji_pokok']) }}<div class="mut kecil">{{ $x['hadir'] }} × {{ rupiah($x['gaji_harian']) }}</div></td>
+                    <td class="kanan"><b>{{ rupiah($x['total_gaji']) }}</b></td>
                 </tr>
             @empty
-                <tr><td colspan="9" class="kosong mut">{{ $cari ? 'Tidak ada karyawan dengan nama itu.' : 'Belum ada karyawan aktif.' }}</td></tr>
+                <tr><td colspan="11" class="kosong mut">{{ $cari ? 'Tidak ada karyawan dengan nama itu.' : 'Belum ada karyawan aktif.' }}</td></tr>
             @endforelse
             </tbody>
         </table>

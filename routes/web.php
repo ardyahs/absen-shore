@@ -33,6 +33,7 @@ Route::middleware(['auth', 'peran'])->group(function () {
         Route::post('/karyawan', [Admin\KaryawanController::class, 'store'])->name('karyawan.simpan');
         Route::patch('/karyawan/{user}/status', [Admin\KaryawanController::class, 'status'])->name('karyawan.status');
         Route::put('/karyawan/{user}/sandi', [Admin\KaryawanController::class, 'sandi'])->name('karyawan.sandi');
+        Route::put('/karyawan/{user}/gaji', [Admin\KaryawanController::class, 'gaji'])->name('karyawan.gaji');
         Route::get('/pengaturan', [Admin\PengaturanController::class, 'edit'])->name('pengaturan');
         Route::put('/pengaturan', [Admin\PengaturanController::class, 'update'])->name('pengaturan.simpan');
     });

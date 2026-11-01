@@ -12,7 +12,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $fillable = ['nama', 'username', 'password', 'role', 'aktif'];
+    public const GAJI_HARIAN = 50000;
+
+    protected $fillable = ['nama', 'username', 'password', 'role', 'aktif', 'gaji_harian'];
+
+    protected $attributes = ['gaji_harian' => self::GAJI_HARIAN];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -21,6 +25,7 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
             'aktif' => 'boolean',
+            'gaji_harian' => 'integer',
         ];
     }
 

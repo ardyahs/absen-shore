@@ -23,6 +23,7 @@ class RekapController extends Controller
             'totalReward' => $rows->sum('total_reward'),
             'totalPinalti' => $rows->sum('total_pinalti'),
             'totalTerlambat' => $rows->sum('terlambat'),
+            'totalGaji' => $rows->sum('total_gaji'),
         ]);
     }
 
@@ -35,11 +36,12 @@ class RekapController extends Controller
         return response()->streamDownload(function () use ($rows) {
             $out = fopen('php://output', 'w');
             fwrite($out, "\xEF\xBB\xBF");
-            fputcsv($out, ['Nama', 'Username', 'Hadir', 'Reward', 'Tepat waktu', 'Terlambat', 'Total reward', 'Total pinalti', 'Saldo', '% Tepat'], ',', '"', '');
+            fputcsv($out, ['Nama', 'Username', 'Hadir', 'Reward', 'Tepat waktu', 'Terlambat', 'Total reward', 'Total pinalti', 'Saldo', '% Tepat', 'Gaji harian', 'Gaji pokok', 'Total gaji'], ',', '"', '');
             foreach ($rows as $r) {
                 fputcsv($out, [
                     $r['user']->nama, $r['user']->username, $r['hadir'], $r['reward'], $r['tepat'],
                     $r['terlambat'], $r['total_reward'], $r['total_pinalti'], $r['saldo'], $r['persen_tepat'],
+                    $r['gaji_harian'], $r['gaji_pokok'], $r['total_gaji'],
                 ], ',', '"', '');
             }
             fclose($out);

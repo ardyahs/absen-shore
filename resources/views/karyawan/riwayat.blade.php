@@ -18,9 +18,11 @@
 
     <div class="kv"><span>Ketepatan waktu</span><b>{{ $r['persen_tepat'] }}%</b></div>
     <div class="bar" role="img" aria-label="Ketepatan waktu {{ $r['persen_tepat'] }} persen"><i style="width: {{ $r['persen_tepat'] }}%"></i></div>
+    <div class="kv"><span>Gaji pokok ({{ $r['hadir'] }} × {{ rupiah($r['gaji_harian']) }})</span><span>{{ rupiah($r['gaji_pokok']) }}</span></div>
     <div class="kv"><span>Reward ({{ $r['reward'] }} hari)</span><span class="baik">{{ rupiah($r['total_reward'], true) }}</span></div>
     <div class="kv"><span>Pinalti ({{ $r['terlambat'] }} hari)</span><span class="waspada">{{ rupiah(-$r['total_pinalti'], true) }}</span></div>
     <div class="kv total"><span>Saldo bersih</span><span @class(['baik' => $r['saldo'] >= 0, 'waspada' => $r['saldo'] < 0])>{{ rupiah($r['saldo'], true) }}</span></div>
+    <div class="kv total"><span>Total gaji</span><b>{{ rupiah($r['total_gaji']) }}</b></div>
 
     <ul class="daftar">
         @forelse ($rows as $a)

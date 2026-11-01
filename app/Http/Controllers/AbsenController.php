@@ -111,7 +111,7 @@ class AbsenController extends Controller
             'hari' => $hari,
             'dari' => $dari,
             'rows' => $rows,
-            'r' => Rekap::ringkas($rows),
+            'r' => Rekap::ringkas($rows, $request->user()->gaji_harian),
         ]);
     }
 

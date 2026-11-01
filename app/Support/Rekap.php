@@ -7,8 +7,11 @@ use Illuminate\Support\Collection;
 
 final class Rekap
 {
-    /** Ringkasan dari kumpulan absen. Hanya status "valid" yang dihitung. */
-    public static function ringkas(Collection $rows): array
+    /**
+     * Ringkasan dari kumpulan absen. Hanya status "valid" yang dihitung.
+     * Gaji = hari hadir × gaji harian + reward − pinalti.
+     */
+    public static function ringkas(Collection $rows, int $gajiHarian = User::GAJI_HARIAN): array
     {
         $valid = $rows->where('status', 'valid');
         $hitung = fn (string $k) => $valid->where('kategori', $k)->count();
@@ -24,6 +27,9 @@ final class Rekap
             'total_reward' => $reward,
             'total_pinalti' => $pinalti,
             'saldo' => $reward - $pinalti,
+            'gaji_harian' => $gajiHarian,
+            'gaji_pokok' => $hadir * $gajiHarian,
+            'total_gaji' => $hadir * $gajiHarian + $reward - $pinalti,
             'persen_tepat' => $hadir ? (int) round(($hitung('reward') + $hitung('tepat')) * 100 / $hadir) : 0,
             'ditinjau' => $rows->where('status', 'perlu_ditinjau')->count(),
         ];
@@ -41,6 +47,6 @@ final class Rekap
             ->with(['attendances' => fn ($q) => $q->where('tanggal', '>=', $dari)])
             ->orderBy('nama')
             ->get()
-            ->map(fn (User $u) => ['user' => $u] + self::ringkas($u->attendances));
+            ->map(fn (User $u) => ['user' => $u] + self::ringkas($u->attendances, $u->gaji_harian));
     }
 }

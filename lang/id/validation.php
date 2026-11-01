@@ -29,6 +29,7 @@ return [
         'username' => 'username',
         'password' => 'kata sandi',
         'nama' => 'nama',
+        'gaji_harian' => 'gaji harian',
         'lama' => 'kata sandi lama',
         'baru' => 'kata sandi baru',
         'jam_masuk' => 'jam masuk',

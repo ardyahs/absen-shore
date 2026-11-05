@@ -10,7 +10,6 @@ use App\Support\AturanAbsen;
 use App\Support\Rekap;
 use App\Support\Waktu;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,8 +21,8 @@ class AbsenKaryawanController extends Controller
         abort_unless($user->role === 'karyawan', 404);
 
         $hariIni = Waktu::tanggal();
-        $dari = $this->tanggal($request->query('dari')) ?? Waktu::mulai(15);
-        $sampai = $this->tanggal($request->query('sampai')) ?? $hariIni;
+        $dari = Waktu::bacaTanggal($request->query('dari')) ?? Waktu::mulai(15);
+        $sampai = Waktu::bacaTanggal($request->query('sampai')) ?? $hariIni;
         if ($dari > $sampai) {
             [$dari, $sampai] = [$sampai, $dari];
         }
@@ -107,19 +106,5 @@ class AbsenKaryawanController extends Controller
         $attendance->delete();
 
         return back()->with('status', 'Absen '.tgl($attendance->tanggal).' dihapus.');
-    }
-
-    private function tanggal(mixed $nilai): ?string
-    {
-        $nilai = (string) $nilai;
-        if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $nilai)) {
-            return null;
-        }
-
-        try {
-            return Carbon::createFromFormat('!Y-m-d', $nilai)->toDateString() === $nilai ? $nilai : null;
-        } catch (\Throwable) {
-            return null;
-        }
     }
 }

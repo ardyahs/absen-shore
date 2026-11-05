@@ -28,6 +28,18 @@ final class Waktu
         return self::sekarang()->format('H:i');
     }
 
+    /** Tanggal Y-m-d dari input pengguna; null jika kosong/tidak valid. */
+    public static function bacaTanggal(mixed $nilai): ?string
+    {
+        $nilai = (string) $nilai;
+        if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $nilai)) {
+            return null;
+        }
+        [$y, $m, $d] = array_map('intval', explode('-', $nilai));
+
+        return checkdate($m, $d, $y) ? $nilai : null;
+    }
+
     /** Tanggal awal periode N hari terakhir (termasuk hari ini). */
     public static function mulai(int $hari): string
     {

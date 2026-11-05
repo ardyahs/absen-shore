@@ -139,6 +139,17 @@ class AbsenTest extends TestCase
         Storage::disk('local')->assertMissing($absen->foto);
     }
 
+    public function test_dashboard_menampilkan_absen_tanggal_sebelumnya(): void
+    {
+        $karyawan = User::factory()->create(['nama' => 'Sari Lestari']);
+        $admin = User::factory()->admin()->create();
+        $kemarin = now(config('absensi.zona'))->subDay()->toDateString();
+        $this->actingAs($admin)->post("/admin/karyawan/{$karyawan->id}/absen", ['tanggal' => $kemarin, 'jam' => '15:50', 'nominal' => 0]);
+
+        $this->actingAs($admin)->get('/admin')->assertDontSee('Sari Lestari');
+        $this->actingAs($admin)->get('/admin?tanggal='.$kemarin)->assertOk()->assertSee('Sari Lestari')->assertSee('15:50');
+    }
+
     public function test_karyawan_tidak_bisa_mengelola_absen(): void
     {
         $karyawan = User::factory()->create();

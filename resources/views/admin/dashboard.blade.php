@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('judul', 'Hari ini · Absensi')
+@php $lampau = $tanggal !== $hariIniTanggal; @endphp
 
 @section('isi')
     <div class="kepala">
@@ -7,8 +8,20 @@
         <span class="mut">{{ $totalKaryawan }} karyawan aktif</span>
     </div>
 
+    <div class="alat">
+        <a class="btn btn-garis btn-kecil" href="{{ route('admin.dashboard', ['tanggal' => $sebelum]) }}">‹ Sebelumnya</a>
+        <form method="get" class="aksi">
+            <input type="date" name="tanggal" value="{{ $tanggal }}" max="{{ $hariIniTanggal }}" aria-label="Pilih tanggal" class="input-kecil">
+            <button class="btn btn-garis btn-kecil">Tampilkan</button>
+        </form>
+        @if ($sesudah)
+            <a class="btn btn-garis btn-kecil" href="{{ route('admin.dashboard', ['tanggal' => $sesudah]) }}">Berikutnya ›</a>
+            <a class="btn-teks" href="{{ route('admin.dashboard') }}">Kembali ke hari ini</a>
+        @endif
+    </div>
+
     <div class="angka">
-        <div><b>{{ $r['hadir'] }}</b><span>Hadir, {{ $belum }} belum absen</span></div>
+        <div><b>{{ $r['hadir'] }}</b><span>Hadir, {{ $belum }} {{ $lampau ? 'tidak absen' : 'belum absen' }}</span></div>
         <div><b class="baik">{{ $r['reward'] }}</b><span>Reward {{ rupiah($r['total_reward']) }}</span></div>
         <div><b>{{ $r['tepat'] }}</b><span>Tepat waktu</span></div>
         <div><b class="waspada">{{ $r['terlambat'] }}</b><span>Terlambat, pinalti {{ rupiah($r['total_pinalti']) }}</span></div>
@@ -51,7 +64,7 @@
     @endif
 
     <section>
-        <h2>Absen hari ini</h2>
+        <h2>{{ $lampau ? 'Absen '.tgl($tanggal) : 'Absen hari ini' }}</h2>
         <div class="gulir">
             <table>
                 <thead><tr><th>Foto</th><th>Karyawan</th><th>Jam masuk</th><th>Jarak dari kantor</th><th>Status</th></tr></thead>
@@ -59,7 +72,7 @@
                 @forelse ($hariIni as $a)
                     <tr>
                         <td>@include('admin.foto', ['a' => $a])</td>
-                        <td><b>{{ $a->user->nama }}</b></td>
+                        <td><a href="{{ route('admin.karyawan.absen', ['user' => $a->user, 'dari' => $tanggal, 'sampai' => $tanggal]) }}"><b>{{ $a->user->nama }}</b></a></td>
                         <td>{{ $a->jam }}</td>
                         <td>
                             @if ($a->manual())
@@ -71,7 +84,7 @@
                         <td>@include('partials.status', ['a' => $a])</td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="kosong mut">Belum ada yang absen hari ini.</td></tr>
+                    <tr><td colspan="5" class="kosong mut">{{ $lampau ? 'Tidak ada absen pada tanggal ini.' : 'Belum ada yang absen hari ini.' }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

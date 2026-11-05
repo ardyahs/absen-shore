@@ -119,7 +119,7 @@ class AbsenController extends Controller
     public function foto(Request $request, Attendance $attendance)
     {
         abort_unless($request->user()->isAdmin() || $attendance->user_id === $request->user()->id, 403);
-        abort_unless(Storage::disk('local')->exists($attendance->foto), 404);
+        abort_unless($attendance->foto && Storage::disk('local')->exists($attendance->foto), 404);
 
         return Storage::disk('local')->response($attendance->foto, null, [
             'Cache-Control' => 'private, max-age=86400',

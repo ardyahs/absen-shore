@@ -61,7 +61,13 @@
                         <td>@include('admin.foto', ['a' => $a])</td>
                         <td><b>{{ $a->user->nama }}</b></td>
                         <td>{{ $a->jam }}</td>
-                        <td>{{ number_format($a->jarak, 0, ',', '.') }} m <span class="mut kecil">(GPS ±{{ $a->akurasi }} m)</span></td>
+                        <td>
+                            @if ($a->manual())
+                                <span class="mut kecil">Dicatat admin</span>
+                            @else
+                                {{ number_format($a->jarak, 0, ',', '.') }} m <span class="mut kecil">(GPS ±{{ $a->akurasi }} m)</span>
+                            @endif
+                        </td>
                         <td>@include('partials.status', ['a' => $a])</td>
                     </tr>
                 @empty

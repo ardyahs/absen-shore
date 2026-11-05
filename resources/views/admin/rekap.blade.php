@@ -38,7 +38,7 @@
             <tbody>
             @forelse ($rows as $x)
                 <tr>
-                    <td><b>{{ $x['user']->nama }}</b></td>
+                    <td><a href="{{ route('admin.karyawan.absen', $x['user']) }}"><b>{{ $x['user']->nama }}</b></a></td>
                     <td class="kanan">{{ $x['hadir'] }}</td>
                     <td class="kanan baik">{{ $x['reward'] }}</td>
                     <td class="kanan">{{ $x['tepat'] }}</td>

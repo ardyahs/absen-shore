@@ -100,6 +100,55 @@ class AbsenTest extends TestCase
         $this->assertSame(50000, $karyawan->fresh()->gaji_harian);
     }
 
+    public function test_admin_menambah_absen_manual_dengan_nominal_sendiri(): void
+    {
+        $karyawan = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $kemarin = now(config('absensi.zona'))->subDay()->toDateString();
+
+        $this->actingAs($admin)->post("/admin/karyawan/{$karyawan->id}/absen", [
+            'tanggal' => $kemarin, 'jam' => '16:40', 'nominal' => -2000, 'catatan' => 'HP rusak',
+        ])->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('attendances', [
+            'user_id' => $karyawan->id, 'tanggal' => $kemarin, 'jam' => '16:40', 'kategori' => 'terlambat',
+            'nominal' => -2000, 'status' => 'valid', 'foto' => null, 'dibuat_oleh' => $admin->id,
+        ]);
+
+        // Tanggal yang sama tidak boleh dobel
+        $this->actingAs($admin)->post("/admin/karyawan/{$karyawan->id}/absen", [
+            'tanggal' => $kemarin, 'jam' => '15:00', 'nominal' => 5000,
+        ])->assertSessionHasErrors('tanggal');
+
+        $this->actingAs($admin)->get("/admin/karyawan/{$karyawan->id}/absen")->assertOk()->assertSee('HP rusak')->assertSee('Rp48.000');
+    }
+
+    public function test_admin_mengubah_status_lalu_menghapus_absen(): void
+    {
+        Storage::fake('local');
+        config(['absensi.simulasi_jam' => '15:42']);
+        $karyawan = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($karyawan)->postJson('/absen', $this->kiriman())->assertOk();
+        $absen = Attendance::first();
+
+        $this->actingAs($admin)->patch("/admin/absen/{$absen->id}/status", ['status' => 'ditolak'])->assertRedirect();
+        $this->assertSame('ditolak', $absen->fresh()->status);
+
+        $this->actingAs($admin)->delete("/admin/absen/{$absen->id}")->assertRedirect();
+        $this->assertDatabaseCount('attendances', 0);
+        Storage::disk('local')->assertMissing($absen->foto);
+    }
+
+    public function test_karyawan_tidak_bisa_mengelola_absen(): void
+    {
+        $karyawan = User::factory()->create();
+
+        $this->actingAs($karyawan)->post("/admin/karyawan/{$karyawan->id}/absen", [
+            'tanggal' => now()->toDateString(), 'jam' => '15:00', 'nominal' => 100000,
+        ]);
+        $this->assertDatabaseCount('attendances', 0);
+    }
+
     public function test_karyawan_tidak_bisa_membuka_halaman_admin(): void
     {
         $this->actingAs(User::factory()->create())->get('/admin')->assertRedirect(route('home'));

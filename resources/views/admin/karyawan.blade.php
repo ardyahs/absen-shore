@@ -20,7 +20,7 @@
                 <tbody>
                 @forelse ($users as $u)
                     <tr @class(['redup' => ! $u->aktif])>
-                        <td><b>{{ $u->nama }}</b></td>
+                        <td><a href="{{ route('admin.karyawan.absen', $u) }}"><b>{{ $u->nama }}</b></a></td>
                         <td>{{ $u->username }}</td>
                         <td><span @class(['status', 'baik' => $u->aktif, 'mut' => ! $u->aktif])>{{ $u->aktif ? 'Aktif' : 'Nonaktif' }}</span></td>
                         <td>

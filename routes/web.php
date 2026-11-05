@@ -34,6 +34,10 @@ Route::middleware(['auth', 'peran'])->group(function () {
         Route::patch('/karyawan/{user}/status', [Admin\KaryawanController::class, 'status'])->name('karyawan.status');
         Route::put('/karyawan/{user}/sandi', [Admin\KaryawanController::class, 'sandi'])->name('karyawan.sandi');
         Route::put('/karyawan/{user}/gaji', [Admin\KaryawanController::class, 'gaji'])->name('karyawan.gaji');
+        Route::get('/karyawan/{user}/absen', [Admin\AbsenKaryawanController::class, 'index'])->name('karyawan.absen');
+        Route::post('/karyawan/{user}/absen', [Admin\AbsenKaryawanController::class, 'store'])->name('karyawan.absen.simpan');
+        Route::patch('/absen/{attendance}/status', [Admin\AbsenKaryawanController::class, 'status'])->name('absen.status');
+        Route::delete('/absen/{attendance}', [Admin\AbsenKaryawanController::class, 'destroy'])->name('absen.hapus');
         Route::get('/pengaturan', [Admin\PengaturanController::class, 'edit'])->name('pengaturan');
         Route::put('/pengaturan', [Admin\PengaturanController::class, 'update'])->name('pengaturan.simpan');
     });

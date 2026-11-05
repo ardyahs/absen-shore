@@ -44,7 +44,7 @@
             <h2>Absen masuk tercatat</h2>
             <p class="hasil-jam">{{ $hariIni->jam }} WITA</p>
             @include('partials.status', ['a' => $hariIni])
-            <p class="mut kecil">{{ $hariIni->keterangan() }}<br>Jarak dari kantor {{ $hariIni->jarak }} m</p>
+            <p class="mut kecil">{{ $hariIni->keterangan() }}@unless ($hariIni->manual())<br>Jarak dari kantor {{ $hariIni->jarak }} m@endunless</p>
         </section>
     @endif
 @endsection
